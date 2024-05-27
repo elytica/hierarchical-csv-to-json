@@ -28,6 +28,10 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
+      - name: Set Git user
+        run: |
+          git config --global user.email "omega@live.co.za"
+          git config --global user.name "Ruan Luies"
       - run: npm run release
       - name: Set Git user
         run: |
