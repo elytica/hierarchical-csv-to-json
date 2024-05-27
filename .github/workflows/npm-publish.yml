@@ -1,4 +1,4 @@
-name: Package
+name: NPM Package
 
 on:
   push:
@@ -29,6 +29,10 @@ jobs:
           node-version: 16
       - run: npm ci
       - run: npm run release
+      - name: Set Git user
+        run: |
+          git config --global user.email "omega@live.co.za"
+          git config --global user.name "Ruan Luies"
       - name: Push changes and tags
         run: |
           git push --follow-tags origin main
