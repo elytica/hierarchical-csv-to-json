@@ -26,13 +26,45 @@ export function HCSVtoJSON(csv: string): Result {
         return value;
     };
 
+    const parseCSVLine = (line: string): string[] => {
+        const values: string[] = [];
+        let current = '';
+        let inQuotes = false;
+        let i = 0;
+
+        while (i < line.length) {
+            const char = line[i];
+
+            if (char === '"') {
+                if (inQuotes && line[i + 1] === '"') {
+                    // Handle escaped quotes ("")
+                    current += '"';
+                    i += 2;
+                    continue;
+                }
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                // Found delimiter outside of quotes
+                values.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+            i++;
+        }
+
+        // Add the last value
+        values.push(current.trim());
+        return values;
+    };
+
     lines.map((l: string) => l.replace(/^\t+/, '')).forEach(line => {
         if (line.trim() === '') {
             return;
         }
 
         const level = parseInt(line.charAt(0), 10);
-        const values = line.slice(2).split(',').map(v => stripQuotes(v.trim()));
+        const values = parseCSVLine(line.slice(2)).map(v => stripQuotes(v));
         while (stack.length >= level) {
             stack.pop();
         }
