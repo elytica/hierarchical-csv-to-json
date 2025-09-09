@@ -37,7 +37,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
-          git commit -m "chore(release): release new version"
+          git commit --allow-empty -m "chore(release): release new version"
           git push --follow-tags origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
