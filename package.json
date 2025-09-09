@@ -1,6 +1,6 @@
 {
   "name": "hierarchical-csv-to-json",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Hierarchical CSV to JSON",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
