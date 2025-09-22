@@ -80,10 +80,26 @@ export function HCSVtoJSON(csv: string): Result {
             const data: DataObject = {};
             const { headers } = stack[stack.length - 1];
             headers!.forEach((header, i) => {
-                const value = values[headers!.length == values.length ? i : i - 1]; // remove first
-                data[header] = isNaN(Number(value)) || value === '' ? value : Number(value);
-                if (i == 0) {
-                  data[header] = headers!.length == values.length ? data[header] : header;
+                // Use simple left-to-right mapping for most cases
+                // Only use complex logic for nested hierarchical structures (level > 3)
+                const useComplexLogic = level > 3 && headers!.length !== values.length;
+                
+                let value;
+                if (useComplexLogic) {
+                    // Original complex logic for nested hierarchical structures
+                    value = values[headers!.length == values.length ? i : i - 1]; // remove first
+                    data[header] = isNaN(Number(value)) || value === '' ? value : Number(value);
+                    if (i == 0) {
+                        data[header] = headers!.length == values.length ? data[header] : header;
+                    }
+                } else {
+                    // Simple left-to-right mapping for regular cases
+                    value = values[i];
+                    if (value !== undefined) {
+                        data[header] = isNaN(Number(value)) || value === '' ? value : Number(value);
+                    } else {
+                        data[header] = ''; // Default to empty string if no value
+                    }
                 }
             });
             const parentContext = stack[stack.length - 2];

@@ -93,5 +93,58 @@ describe('HCSVtoJSON function', () => {
         };
         expect(HCSVtoJSON(csv)).toEqual(expectedOutput);
     });
+
+    test('parses Tasks and Dependencies sections correctly', () => {
+        const csv = `1,Tasks
+2,ID,"Start X","Start Y","Start Z","End X","End Y","End Z","Type","Tonnes"
+3,1,0,0,0,10,0,0,"Type 1",121212
+3,2,10,0,0,20,0,0,"Type 2",1212
+3,3,20,0,0,30,0,0,"Type 2",1212
+3,4,30,0,0,40,0,0,"Type 1",1212
+1,Dependencies
+2,From,To,Type,Layer,Lag,Is External,CalendarType,Calendar
+3,1,2,FS,"Work Packages",0mi,,Successor
+3,2,3,FS,"Work Packages",0mi,,Successor
+3,3,4,FS,"Work Packages",0mi,,Successor`;
+
+        const result = HCSVtoJSON(csv);
+        
+        expect(result).toHaveProperty('Tasks');
+        expect(result).toHaveProperty('Dependencies');
+        
+        expect(Array.isArray(result.Tasks)).toBe(true);
+        expect(Array.isArray(result.Dependencies)).toBe(true);
+        
+        expect(result.Tasks).toHaveLength(4);
+        expect(result.Dependencies).toHaveLength(3);
+        
+        // Verify Tasks data
+        expect(result.Tasks[0].ID).toBe(1);
+        expect(result.Tasks[0]["Start X"]).toBe(0);
+        expect(result.Tasks[0]["Start Y"]).toBe(0);
+        expect(result.Tasks[0]["Start Z"]).toBe(0);
+        expect(result.Tasks[0]["End X"]).toBe(10);
+        expect(result.Tasks[0]["End Y"]).toBe(0);
+        expect(result.Tasks[0]["End Z"]).toBe(0);
+        expect(result.Tasks[0].Type).toBe("Type 1");
+        expect(result.Tasks[0].Tonnes).toBe(121212);
+        
+        expect(result.Tasks[1].ID).toBe(2);
+        expect(result.Tasks[1].Type).toBe("Type 2");
+        expect(result.Tasks[1].Tonnes).toBe(1212);
+        
+        // Verify Dependencies data
+        expect(result.Dependencies[0].From).toBe(1);
+        expect(result.Dependencies[0].To).toBe(2);
+        expect(result.Dependencies[0].Type).toBe("FS");
+        expect(result.Dependencies[0].Layer).toBe("Work Packages");
+        expect(result.Dependencies[0].Lag).toBe("0mi");
+        
+        expect(result.Dependencies[1].From).toBe(2);
+        expect(result.Dependencies[1].To).toBe(3);
+        
+        expect(result.Dependencies[2].From).toBe(3);
+        expect(result.Dependencies[2].To).toBe(4);
+    });
 });
 
