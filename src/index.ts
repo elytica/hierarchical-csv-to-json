@@ -80,26 +80,12 @@ export function HCSVtoJSON(csv: string): Result {
             const data: DataObject = {};
             const { headers } = stack[stack.length - 1];
             headers!.forEach((header, i) => {
-                // Use simple left-to-right mapping for most cases
-                // Only use complex logic for nested hierarchical structures (level > 3)
-                const useComplexLogic = level > 3 && headers!.length !== values.length;
-                
-                let value;
-                if (useComplexLogic) {
-                    // Original complex logic for nested hierarchical structures
-                    value = values[headers!.length == values.length ? i : i - 1]; // remove first
+                // Simple left-to-right mapping for all levels
+                const value = values[i];
+                if (value !== undefined) {
                     data[header] = isNaN(Number(value)) || value === '' ? value : Number(value);
-                    if (i == 0) {
-                        data[header] = headers!.length == values.length ? data[header] : header;
-                    }
                 } else {
-                    // Simple left-to-right mapping for regular cases
-                    value = values[i];
-                    if (value !== undefined) {
-                        data[header] = isNaN(Number(value)) || value === '' ? value : Number(value);
-                    } else {
-                        data[header] = ''; // Default to empty string if no value
-                    }
+                    data[header] = ''; // Default to empty string if no value
                 }
             });
             const parentContext = stack[stack.length - 2];
@@ -107,15 +93,36 @@ export function HCSVtoJSON(csv: string): Result {
                 parentContext.context.push(data);
             } else {
                 const lastItem = parentContext.context[parentContext.context.length - 1] as DataObject;
-                const keyValue = headers!.length > 1 ? String(data[headers![0]]) : undefined;
-                if (keyValue) {
-                    delete data[headers![0]];
-                    if (!lastItem[keyValue]) {
-                        lastItem[keyValue] = [];
+                
+                // Special handling for "List" as first header - create a list structure
+                if (headers![0] === 'List' && headers!.length > 1) {
+                    // Remove the "List" header and create the list structure
+                    const listData: DataObject = {};
+                    headers!.slice(1).forEach((header, i) => {
+                        const value = values[i]; // Use values left-to-right for non-List headers
+                        if (value !== undefined) {
+                            listData[header] = isNaN(Number(value)) || value === '' ? value : Number(value);
+                        } else {
+                            listData[header] = '';
+                        }
+                    });
+                    
+                    if (!lastItem['List']) {
+                        lastItem['List'] = [];
                     }
-                    (lastItem[keyValue] as DataObject[]).push(data);
+                    (lastItem['List'] as DataObject[]).push(listData);
                 } else {
-                    parentContext.context.push(data);
+                    // Original nested logic for other cases
+                    const keyValue = headers!.length > 1 ? String(data[headers![0]]) : undefined;
+                    if (keyValue) {
+                        delete data[headers![0]];
+                        if (!lastItem[keyValue]) {
+                            lastItem[keyValue] = [];
+                        }
+                        (lastItem[keyValue] as DataObject[]).push(data);
+                    } else {
+                        parentContext.context.push(data);
+                    }
                 }
             }
             stack.push({ context: [data], type: 'object' });

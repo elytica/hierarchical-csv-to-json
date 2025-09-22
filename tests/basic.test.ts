@@ -68,16 +68,20 @@ describe('HCSVtoJSON function', () => {
                 { "Name": "Backfill", "Type": "Text" },
                 { "Name": "Block", "Type": "Text" },
                 { "Name": "Block Number", "Type": "Text" },
-                { "Name": "BM Name", "Type": "Combo", "List": [
-                    { "Label": "West 1", "Color": 12533824, "Pattern": 0, "Shape": 0 },
-                    { "Label": "West 2", "Color": 4243391, "Pattern": 0, "Shape": 0 },
-                    { "Label": "WestCent", "Color": 4210879, "Pattern": 0, "Shape": 0 },
-                    { "Label": "Cent 1", "Color": 8405183, "Pattern": 0, "Shape": 0 },
-                    { "Label": "Cent 2", "Color": 10895551, "Pattern": 0, "Shape": 0 },
-                    { "Label": "East 1", "Color": 12533951, "Pattern": 0, "Shape": 0 },
-                    { "Label": "East 2", "Color": 12533933, "Pattern": 0, "Shape": 0 },
-                    { "Label": 1, "Color": 12533919, "Pattern": 0, "Shape": 0 }
-                ]}
+                { 
+                    "Name": "BM Name", 
+                    "Type": "Combo",
+                    "List": [
+                        { "Label": "West 1", "Color": 12533824, "Pattern": 0, "Shape": 0 },
+                        { "Label": "West 2", "Color": 4243391, "Pattern": 0, "Shape": 0 },
+                        { "Label": "WestCent", "Color": 4210879, "Pattern": 0, "Shape": 0 },
+                        { "Label": "Cent 1", "Color": 8405183, "Pattern": 0, "Shape": 0 },
+                        { "Label": "Cent 2", "Color": 10895551, "Pattern": 0, "Shape": 0 },
+                        { "Label": "East 1", "Color": 12533951, "Pattern": 0, "Shape": 0 },
+                        { "Label": "East 2", "Color": 12533933, "Pattern": 0, "Shape": 0 },
+                        { "Label": 1, "Color": 12533919, "Pattern": 0, "Shape": 0 }
+                    ]
+                }
             ]
         };
 
