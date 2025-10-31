@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.2.4 (2025-10-31)
+
+
+### Bug Fixes
+
+* check if lastItem array exist ([5c26668](https://github.com/elytica/hierarchical-csv-to-json/commit/5c26668590b3fcf2460d23c6073f22080e265ee1))
+
 ### 1.2.3 (2025-09-22)
 
 
