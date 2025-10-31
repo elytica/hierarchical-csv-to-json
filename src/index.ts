@@ -116,7 +116,7 @@ export function HCSVtoJSON(csv: string): Result {
                     const keyValue = headers!.length > 1 ? String(data[headers![0]]) : undefined;
                     if (keyValue) {
                         delete data[headers![0]];
-                        if (!lastItem[keyValue]) {
+                        if (!Array.isArray(lastItem[keyValue])) {
                             lastItem[keyValue] = [];
                         }
                         (lastItem[keyValue] as DataObject[]).push(data);
